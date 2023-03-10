@@ -4,19 +4,19 @@ use bevy::prelude::*;
 
 // also note - paths must contain at least two points to be valid
 
-pub struct Path {
-    curves: Vec<Bez3>,
+pub struct Bezier {
+    curves: Vec<[Vec2; 4]>,
 }
 
-impl Path {
-    pub fn new(slice: &[Bez3]) -> Self {
+impl Bezier {
+    pub fn new(curves: impl Into<Vec<[Vec2; 4]>>) -> Self {
         Self {
-            curves: Vec::from(slice),
+            curves: curves.into(),
         }
     }
 
-    pub fn len(&self) -> usize {
-        self.curves.len()
+    pub fn len(&self) -> f32 {
+        self.curves.len() as f32
     }
 
     pub fn get(&self, u: f32) -> Option<Vec2> {
@@ -24,15 +24,20 @@ impl Path {
     }
 
     pub fn get_split(&self, i: usize, t: f32) -> Option<Vec2> {
-        if i == self.len() {
-            return Some(self.curves.last()?.last())
+        if i == self.curves.len() {
+            return Some(self.curves.last()?[3])
         }
 
-        if i > self.len() {
-            return None;
-        }
-    
-        self.curves.get(i)?.get(t)
+        let [p0, p1, p2, p3] = self.curves.get(i).copied()?;
+
+        Some(((1.0 - t).powi(3) * p0)
+        + (3.0 * (1.0 - t).powi(2) * t * p1)
+        + (3.0 * (1.0 - t) * t.powi(2) * p2)
+        + (t.powi(3) * p3))
+    }
+
+    pub fn get_curve(&self, u: f32) -> Option<[Vec2; 4]> {
+        self.curves.get(u.floor() as usize).copied()
     }
 }
 

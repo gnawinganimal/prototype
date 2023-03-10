@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use crate::Bezier;
 
 #[derive(Component, Deref, DerefMut)]
 pub struct Velocity(Vec3);
@@ -18,7 +19,7 @@ pub struct EnemyConfig {
 pub struct Enemy;
 
 #[derive(Component)]
-pub struct Follow {
-    pub path: Bezier<Vec2>,
-    pub timer: Timer,
+pub struct Follower {
+    pub path: Bezier,
+    pub u: f32,
 }

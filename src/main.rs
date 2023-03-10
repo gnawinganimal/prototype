@@ -5,13 +5,13 @@ pub use crate::{
     movement::move_bullet,
     collision::{collide_player_enemy, collide_bullet_enemy},
     despawn::despawn_timer_system,
-    spline::{Path, Bez3},
+    spline::{Bezier},
 };
 use bevy::{
     prelude::*,
     sprite::MaterialMesh2dBundle,
 };
-use components::Follow;
+use components::Follower;
 
 pub mod despawn;
 pub mod controls;
@@ -26,20 +26,28 @@ pub const BULLET_SPEED: f32 = 500.0;
 pub const PLAYER_SIZE: f32 = 15.;
 pub const BULLET_SIZE: f32 = 5.;
 pub const ENEMY_SIZE: f32 = 15.;
+pub const ENEMY_SPEED: f32 = 60.0;
 
-fn follow(mut cmd: Commands, time: Res<Time>, mut query: Query<(Entity, &mut Transform, &mut Follow)>) {
-    for (entity, mut trans, mut follow) in &mut query {
-        // increment time
-        follow.timer.tick(time.delta());
+fn follow(mut cmd: Commands, time: Res<Time>, mut query: Query<(Entity, &mut Transform, &mut Follower)>) {
+    for (entity, mut trans, mut follower) in &mut query {
+        let t = time.delta_seconds();
+        let s = ENEMY_SPEED * t;
 
-        let p = follow.path.to_curve().position(follow.timer.elapsed().as_secs_f32());
+        if follower.u > follower.path.len() {
+            cmd.entity(entity).despawn();
+            continue;
+        }
+
+        let [p0, p1, p2, p3] = follower.path.get_curve(follower.u).expect("Curve does not exist");
+
+        let v0 = -3. * p0 + 9. * p1 - 9. * p2 + 3. * p3;
+        let v1 = 6. * p0 - 12. * p1 + 6. * p2;
+        let v2 = -3. * p0 + 3. * p1;
+
+        follower.u += s / (t.powi(2) * v0 + t * v1 + v2).length();
+        let p = follower.path.get(follower.u).expect("AHHH!");
         trans.translation.x = p.x;
         trans.translation.y = p.y;
-
-        // despawn entities which have finished their paths
-        if follow.timer.finished() {
-            cmd.entity(entity).despawn();
-        }
     }
 }
 
@@ -60,8 +68,8 @@ fn startup(
     ));
     cmd.spawn((
         Enemy,
-        Follow {
-            timer: Timer::from_seconds(2.0, TimerMode::Once),
+        Follower {
+            u: 0.,
             path: Bezier::new([
                 [
                     Vec2::new(-300.0, -300.0),
