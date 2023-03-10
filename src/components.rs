@@ -1,20 +1,5 @@
 use bevy::prelude::*;
 
-#[derive(Resource)]
-pub struct State {
-    points: u32,
-    health: u32,
-}
-
-impl Default for State {
-    fn default() -> Self {
-        Self {
-            points: 0,
-            health: 3,
-        }
-    }
-}
-
 #[derive(Component, Deref, DerefMut)]
 pub struct Velocity(Vec3);
 
