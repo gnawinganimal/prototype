@@ -21,6 +21,6 @@ pub struct Enemy;
 
 #[derive(Component)]
 pub struct Follow {
-    pub path: Path,
+    pub path: Bezier<Vec2>,
     pub timer: Timer,
 }

@@ -6,13 +6,13 @@ pub use crate::{
     movement::move_bullet,
     collision::{collide_player_enemy, collide_bullet_enemy},
     despawn::despawn_timer_system,
+    spline::{Path, Bez3},
 };
 use bevy::{
     prelude::*,
     sprite::MaterialMesh2dBundle,
 };
 use components::Follow;
-use spline::Path;
 
 pub mod despawn;
 pub mod controls;
@@ -29,11 +29,9 @@ fn follow(mut cmd: Commands, time: Res<Time>, mut query: Query<(Entity, &mut Tra
         // increment time
         follow.timer.tick(time.delta());
 
-        // update position
-        if let Some(vec2) = follow.path.get(follow.timer.elapsed().as_secs_f32()) {
-            trans.translation.x = vec2.x as f32;
-            trans.translation.y = vec2.y as f32;
-        }
+        let p = follow.path.to_curve().position(follow.timer.elapsed().as_secs_f32());
+        trans.translation.x = p.x;
+        trans.translation.y = p.y;
 
         // despawn entities which have finished their paths
         if follow.timer.finished() {
@@ -53,15 +51,28 @@ fn startup(
         MaterialMesh2dBundle {
             mesh: mesh.add(shape::Circle::new(20.0).into()).into(),
             material: material.add(ColorMaterial::from(Color::ALICE_BLUE)),
-            transform: Transform::from_translation(Vec3::new(-150., 0., 0.)),
+            transform: Transform::from_translation(Vec3::new(0., 0., 0.)),
             ..default()
         },
     ));
     cmd.spawn((
         Enemy,
         Follow {
-            timer: Timer::from_seconds(3.0, TimerMode::Once),
-            path: Path::new(&[Vec2::new(0.0, 0.0), Vec2::new(100.0, 0.0), Vec2::new(200.0, 0.0), Vec2::new(100.0, 0.0)]),
+            timer: Timer::from_seconds(2.0, TimerMode::Once),
+            path: Bezier::new([
+                [
+                    Vec2::new(-300.0, -300.0),
+                    Vec2::new(-300.0, -200.0),
+                    Vec2::new(-200.0, -100.0),
+                    Vec2::new(-100.0, -100.0),
+                ],
+                [
+                    Vec2::new(-100.0, -100.0),
+                    Vec2::new(0.0, -100.0),
+                    Vec2::new(100.0, 0.0),
+                    Vec2::new(100.0, 100.0),
+                ],
+            ]), 
         },
         MaterialMesh2dBundle {
             mesh: mesh.add(shape::Circle::new(20.0).into()).into(),

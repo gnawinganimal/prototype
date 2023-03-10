@@ -17,7 +17,7 @@ pub fn collide_player_enemy(
             ship_trans.translation,
             Vec2::new(50.0, 50.0),
             enemy_trans.translation,
-            Vec2::new(5.0, 5.0)
+            Vec2::new(50.0, 50.0)
         ) {
             cmd.entity(enemy_entity).despawn();
         };
@@ -34,7 +34,7 @@ pub fn collide_bullet_enemy(
         for (bullet_entity, bullet_trans) in &bullet_query {
             if let Some(_) = collide(
                 enemy_trans.translation,
-                Vec2::new(5.0, 5.0),
+                Vec2::new(50.0, 50.0),
                 bullet_trans.translation,
                 Vec2::new(5.0, 5.0),
             ) {
