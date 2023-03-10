@@ -1,5 +1,5 @@
 
-use crate::{SHIP_SPEED, Bullet, Ship, despawn::DespawnTimer};
+use crate::{SHIP_SPEED, BULLET_SIZE, Bullet, Ship, despawn::DespawnTimer};
 use bevy::{
     prelude::*,
     sprite::MaterialMesh2dBundle,
@@ -44,7 +44,7 @@ pub fn shoot(
             Bullet,
             DespawnTimer(Timer::new(Duration::from_secs(2), TimerMode::Once)),
             MaterialMesh2dBundle {
-                mesh: mesh.add(shape::Circle::new(5.0).into()).into(),
+                mesh: mesh.add(shape::Circle::new(BULLET_SIZE).into()).into(),
                 material: material.add(ColorMaterial::from(Color::ALICE_BLUE)),
                 transform: trans.clone(),
                 ..default()

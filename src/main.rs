@@ -24,6 +24,10 @@ pub mod spline;
 pub const SHIP_SPEED: f32 = 250.0;
 pub const BULLET_SPEED: f32 = 500.0;
 
+pub const PLAYER_SIZE: f32 = 15.;
+pub const BULLET_SIZE: f32 = 5.;
+pub const ENEMY_SIZE: f32 = 15.;
+
 fn follow(mut cmd: Commands, time: Res<Time>, mut query: Query<(Entity, &mut Transform, &mut Follow)>) {
     for (entity, mut trans, mut follow) in &mut query {
         // increment time
@@ -49,7 +53,7 @@ fn startup(
     cmd.spawn((
         Ship,
         MaterialMesh2dBundle {
-            mesh: mesh.add(shape::Circle::new(20.0).into()).into(),
+            mesh: mesh.add(shape::Circle::new(PLAYER_SIZE).into()).into(),
             material: material.add(ColorMaterial::from(Color::ALICE_BLUE)),
             transform: Transform::from_translation(Vec3::new(0., 0., 0.)),
             ..default()
@@ -75,7 +79,7 @@ fn startup(
             ]), 
         },
         MaterialMesh2dBundle {
-            mesh: mesh.add(shape::Circle::new(20.0).into()).into(),
+            mesh: mesh.add(shape::Circle::new(ENEMY_SIZE).into()).into(),
             material: material.add(ColorMaterial::from(Color::ALICE_BLUE)),
             transform: Transform::from_translation(Vec3::new(-150., 0., 0.)),
             ..default()
