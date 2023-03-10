@@ -1,7 +1,5 @@
 use bevy::prelude::*;
 
-use crate::spline::Path;
-
 #[derive(Component, Deref, DerefMut)]
 pub struct Velocity(Vec3);
 

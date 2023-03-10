@@ -1,5 +1,3 @@
-use std::ops::Mul;
-
 use bevy::prelude::*;
 
 // currently path is simply collection of straight lines
