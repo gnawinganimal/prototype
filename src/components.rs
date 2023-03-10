@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::spline::Path;
+
 #[derive(Component, Deref, DerefMut)]
 pub struct Velocity(Vec3);
 
@@ -16,3 +18,9 @@ pub struct EnemyConfig {
 
 #[derive(Component)]
 pub struct Enemy;
+
+#[derive(Component)]
+pub struct Follow {
+    pub path: Path,
+    pub timer: Timer,
+}
