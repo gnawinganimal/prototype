@@ -4,7 +4,7 @@ pub use crate::{
     controls::{move_ship, shoot},
     movement::move_bullet,
     collision::{collide_player_enemy, collide_bullet_enemy},
-    despawn::despawn_timer_system,
+    despawn::{despawn_timer_system, despawn_bullets},
     spline::{Bezier},
 };
 use bevy::{
@@ -104,6 +104,7 @@ fn main() {
         .add_system(collide_player_enemy)
         .add_system(collide_bullet_enemy)
         .add_system(despawn_timer_system)
+        .add_system(despawn_bullets)
         .add_system(follow)
         .run();
 }

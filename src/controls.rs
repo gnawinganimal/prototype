@@ -50,7 +50,7 @@ pub fn shoot(
     if input.just_pressed(KeyCode::Space) {
         cmd.spawn((
             Bullet,
-            DespawnTimer(Timer::new(Duration::from_secs(2), TimerMode::Once)),
+            // DespawnTimer(Timer::new(Duration::from_secs(2), TimerMode::Once)),
             MaterialMesh2dBundle {
                 mesh: mesh.add(shape::Circle::new(BULLET_SIZE).into()).into(),
                 material: material.add(ColorMaterial::from(Color::ALICE_BLUE)),
