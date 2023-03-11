@@ -26,7 +26,15 @@ pub fn move_ship(time: Res<Time>, input: Res<Input<KeyCode>>, mut query: Query<&
         delta.x = SHIP_SPEED * time.delta_seconds();
     }
 
-    trans.translation += delta;
+    let temp = trans.translation + delta;
+
+    if !(delta.x > 0. && temp.x > 100.) && !(delta.x < 0. && temp.x < -100.) {
+        trans.translation.x = temp.x;
+    }
+
+    if !(delta.y > 0. && temp.y > 100.) && !(delta.y < 0. && temp.y < -100.) {
+        trans.translation.y = temp.y;
+    }
 }
 
 pub fn shoot(

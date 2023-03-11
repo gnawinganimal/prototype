@@ -26,7 +26,7 @@ pub const BULLET_SPEED: f32 = 500.0;
 pub const PLAYER_SIZE: f32 = 15.;
 pub const BULLET_SIZE: f32 = 5.;
 pub const ENEMY_SIZE: f32 = 15.;
-pub const ENEMY_SPEED: f32 = 60.0;
+pub const ENEMY_SPEED: f32 = 250.0;
 
 fn follow(mut cmd: Commands, time: Res<Time>, mut query: Query<(Entity, &mut Transform, &mut Follower)>) {
     for (entity, mut trans, mut follower) in &mut query {
@@ -72,16 +72,16 @@ fn startup(
             u: 0.,
             path: Bezier::new([
                 [
-                    Vec2::new(-300.0, -300.0),
-                    Vec2::new(-300.0, -200.0),
-                    Vec2::new(-200.0, -100.0),
-                    Vec2::new(-100.0, -100.0),
+                    Vec2::new(-100.0, 300.0),
+                    Vec2::new(-25.0, 200.0),
+                    Vec2::new(50.0, 100.0),
+                    Vec2::new(125.0, 0.0),
                 ],
                 [
-                    Vec2::new(-100.0, -100.0),
-                    Vec2::new(0.0, -100.0),
-                    Vec2::new(100.0, 0.0),
-                    Vec2::new(100.0, 100.0),
+                    Vec2::new(125.0, 0.0),
+                    Vec2::new(100.0, -50.),
+                    Vec2::new(75., -50.),
+                    Vec2::new(50., 0.0),
                 ],
             ]), 
         },
